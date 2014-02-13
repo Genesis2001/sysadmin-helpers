@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 input()
 {
@@ -25,10 +25,15 @@ fi
 
 result=$(input "Will this user host multiple websites off this server? [y] ")
 
+loc=$(dirname $0)
+file="${loc}/nginx_example.conf"
 if [ "$result" == "n" ]; then
-	# ffffx
-else
-	# ffffy
+	file="${loc}/nginx_example_single.conf"
 fi
+
+CONFIG=${DOMAIN%%.*}
+cat $file > "$CONFIG.conf"
+
+sed -i -e "s/\${USER}/$USER/" -e "s/\${DOMAIN}/$DOMAIN/" "$CONFIG.conf"
 
 exit 0
